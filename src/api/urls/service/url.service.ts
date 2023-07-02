@@ -61,4 +61,19 @@ export class UrlService {
   public async getUrls(user: User): Promise<Url[]> {
     return await this.repository.findBy({ user: { id: user.id } });
   }
+
+  public async deleteUrl(user: User, urlCode: string): Promise<string> {
+    const url = await this.repository.findOneBy({
+      urlCode,
+      user: { id: user.id },
+    });
+    if (!url) {
+      throw new HttpException('Resource not found', HttpStatus.NOT_FOUND);
+    }
+    url.isDeleted = true;
+
+    await this.repository.save(url);
+
+    return 'The Url is deleted successfully';
+  }
 }

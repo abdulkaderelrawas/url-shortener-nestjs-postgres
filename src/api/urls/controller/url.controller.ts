@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -45,5 +46,16 @@ export class UrlController {
     code: string,
   ): Promise<Url> {
     return await this.urlService.getUrl(code);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':code')
+  @HttpCode(200)
+  public async deleteUrl(
+    @User() user: IUser,
+    @Param('code')
+    urlCode: string,
+  ): Promise<string> {
+    return await this.urlService.deleteUrl(user, urlCode);
   }
 }
