@@ -16,12 +16,15 @@ import { CreateUrlDto } from '../dto/url.dto';
 import { UrlService } from '../service/url.service';
 import { User } from 'src/api/auth/decorators/user.decorator';
 import { User as IUser } from 'src/api/user/user.entity';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('urls')
 @Controller('urls')
 @UsePipes(new ValidationPipe())
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(201)
@@ -32,6 +35,7 @@ export class UrlController {
     return await this.urlService.createShortUrl(body, user);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get()
   @HttpCode(200)
@@ -48,6 +52,7 @@ export class UrlController {
     return await this.urlService.getUrl(code);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete(':code')
   @HttpCode(200)

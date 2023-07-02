@@ -15,7 +15,9 @@ import { CreateUserDto, LoginUserDto } from '../dto/user.dto';
 import { User } from '../user.entity';
 import { UserService } from '../service/user.service';
 import { JwtAuthGuard } from 'src/api/auth/guards/jwt.guard';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('users')
 @UsePipes(new ValidationPipe())
 export class UserController {
@@ -37,6 +39,7 @@ export class UserController {
     return await this.userService.login(body);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get()
   @HttpCode(200)
@@ -44,6 +47,7 @@ export class UserController {
     return await this.userService.getUsers();
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   @HttpCode(200)
