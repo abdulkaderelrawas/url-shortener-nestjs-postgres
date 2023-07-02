@@ -11,7 +11,7 @@ import { User } from '../user/user.entity';
 @Entity()
 export class Url {
   @PrimaryGeneratedColumn('uuid')
-  public id!: number;
+  public id!: string;
 
   @ManyToOne(() => User, (user: User) => user.urls)
   public user: User;

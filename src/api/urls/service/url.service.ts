@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Url } from '../url.entity';
@@ -6,12 +12,15 @@ import { CreateUrlDto } from '../dto/url.dto';
 import { User } from 'src/api/user/user.entity';
 import { isURL } from 'class-validator';
 import { nanoid } from 'nanoid';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class UrlService {
   constructor(
     @InjectRepository(Url)
     private readonly repository: Repository<Url>,
+
+    @Inject(CACHE_MANAGER) private cacheService: Cache,
   ) {}
 
   public async createShortUrl(body: CreateUrlDto, user: User): Promise<Url> {
@@ -47,6 +56,13 @@ export class UrlService {
 
   public async getUrl(urlCode: string): Promise<Url> {
     const url = await this.repository.findOneBy({ urlCode });
+    const inCacheData = await this.cacheService.get<Url>(url.id.toString());
+
+    if (inCacheData) {
+      console.log('getting data from cache');
+      return inCacheData;
+    }
+
     if (!url) {
       throw new HttpException('Resource not found', HttpStatus.NOT_FOUND);
     }
@@ -54,6 +70,11 @@ export class UrlService {
     url.count++;
 
     await this.repository.save(url);
+
+    console.log('setting data to cache with key: ', url.id.toString());
+    await this.cacheService.set(url.id.toString(), url);
+    const cachedData = await this.cacheService.get(url.id.toString());
+    console.log('data set to cache', cachedData);
 
     return url;
   }
