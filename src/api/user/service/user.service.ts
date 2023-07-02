@@ -55,7 +55,7 @@ export class UserService {
       email: user.email,
       isDeleted: user.isDeleted,
       createdAt: user.createdAt,
-      updatedAt: user.createdAt,
+      updatedAt: user.updatedAt,
     });
 
     return {
@@ -66,7 +66,7 @@ export class UserService {
         email: user.email,
         isDeleted: user.isDeleted,
         createdAt: user.createdAt,
-        updatedAt: user.createdAt,
+        updatedAt: user.updatedAt,
       },
     };
   }
@@ -94,7 +94,7 @@ export class UserService {
       email: user.email,
       isDeleted: user.isDeleted,
       createdAt: user.createdAt,
-      updatedAt: user.createdAt,
+      updatedAt: user.updatedAt,
     });
 
     return {
@@ -105,7 +105,7 @@ export class UserService {
         email: user.email,
         isDeleted: user.isDeleted,
         createdAt: user.createdAt,
-        updatedAt: user.createdAt,
+        updatedAt: user.updatedAt,
       },
     };
   }

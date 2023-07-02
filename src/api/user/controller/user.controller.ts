@@ -37,6 +37,7 @@ export class UserController {
     return await this.userService.login(body);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   @HttpCode(200)
   public async getUsers(): Promise<User[]> {

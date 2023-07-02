@@ -4,29 +4,32 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
+  ManyToOne,
 } from 'typeorm';
-import { Url } from '../urls/url.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn()
+export class Url {
+  @PrimaryGeneratedColumn('uuid')
   public id!: number;
 
-  @Column({ type: 'varchar', length: 50 })
-  public name: string;
-
-  @Column({ type: 'varchar', length: 50, unique: true })
-  public email: string;
+  @ManyToOne(() => User, (user: User) => user.urls)
+  public user: User;
 
   @Column({ type: 'varchar', length: 150 })
-  public password: string;
+  public longUrl: string;
+
+  @Column({ type: 'varchar', length: 150 })
+  public shortUrl: string;
+
+  @Column({ type: 'varchar', length: 150 })
+  public urlCode: string;
+
+  @Column({ type: 'int' })
+  public count: number;
 
   @Column({ type: 'boolean', default: false })
   public isDeleted: boolean;
-
-  @OneToMany(() => Url, (url: Url) => url.user)
-  public urls: Url[];
 
   /*
    * Create and Update Date Columns
