@@ -100,9 +100,23 @@ export class UrlService {
 
   public async getUrlClicks(urlCode: string): Promise<{ numOfClicks: number }> {
     const url = await this.repository.findOneBy({ urlCode });
+
+    const inCacheData = await this.cacheService.get<number>(url.id + '-count');
+
+    if (inCacheData) {
+      console.log('getting data from cache');
+      return { numOfClicks: inCacheData };
+    }
+
     if (!url) {
       throw new HttpException('Resource not found', HttpStatus.NOT_FOUND);
     }
+
+    console.log('setting data to cache with key: ', url.id + '-count');
+    await this.cacheService.set(url.id + '-count', url.count);
+
+    const cachedData = await this.cacheService.get(url.id + '-count');
+    console.log('data set to cache', cachedData);
 
     return { numOfClicks: url.count };
   }
