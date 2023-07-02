@@ -76,4 +76,13 @@ export class UrlService {
 
     return 'The Url is deleted successfully';
   }
+
+  public async getUrlClicks(urlCode: string): Promise<{ numOfClicks: number }> {
+    const url = await this.repository.findOneBy({ urlCode });
+    if (!url) {
+      throw new HttpException('Resource not found', HttpStatus.NOT_FOUND);
+    }
+
+    return { numOfClicks: url.count };
+  }
 }

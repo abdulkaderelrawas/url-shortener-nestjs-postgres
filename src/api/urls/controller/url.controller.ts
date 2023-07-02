@@ -58,4 +58,13 @@ export class UrlController {
   ): Promise<string> {
     return await this.urlService.deleteUrl(user, urlCode);
   }
+
+  @Get(':code/clicks')
+  @HttpCode(200)
+  public async getUrlClicks(
+    @Param('code')
+    code: string,
+  ): Promise<{ numOfClicks: number }> {
+    return await this.urlService.getUrlClicks(code);
+  }
 }
