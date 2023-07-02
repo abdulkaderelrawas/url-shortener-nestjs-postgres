@@ -7,7 +7,7 @@ import { User } from 'src/api/user/user.entity';
 export class AuthService {
   constructor(private readonly jwtService: JwtService) {}
 
-  async generateJWT(user: User) {
+  async generateJWT(user) {
     const signInOptions = { expiresIn: '365d' };
     return await this.jwtService.signAsync({ user }, signInOptions);
   }

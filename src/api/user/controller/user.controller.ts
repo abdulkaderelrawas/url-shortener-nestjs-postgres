@@ -11,7 +11,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { CreateUserDto } from '../user.dto';
+import { CreateUserDto, LoginUserDto } from '../dto/user.dto';
 import { User } from '../user.entity';
 import { UserService } from '../service/user.service';
 import { JwtAuthGuard } from 'src/api/auth/guards/jwt.guard';
@@ -23,15 +23,19 @@ export class UserController {
 
   @Post()
   @HttpCode(201)
-  public async createUser(@Body() body: CreateUserDto): Promise<User> {
+  public async createUser(
+    @Body() body: CreateUserDto,
+  ): Promise<{ token: string; user }> {
     return await this.userService.createUser(body);
   }
 
-  // @Post()
-  // @HttpCode(200)
-  // public async login(@Body() body: CreateUserDto): Promise<User> {
-  //   return await this.userService.login(body);
-  // }
+  @Post('/login')
+  @HttpCode(200)
+  public async login(
+    @Body() body: LoginUserDto,
+  ): Promise<{ token: string; user }> {
+    return await this.userService.login(body);
+  }
 
   @Get()
   @HttpCode(200)
